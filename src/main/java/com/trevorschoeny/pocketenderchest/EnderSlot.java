@@ -10,6 +10,7 @@ import com.trevlar.slotkit.api.window.GatingContext;
 import com.trevlar.slotkit.api.window.SlotGate;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -41,6 +42,10 @@ public final class EnderSlot {
     /** The slot's group, for SlotKit lookups (operations, Reach, locks). */
     public static final SlotGroupId.Created GROUP_ID = ParityGroup.idOf(PANEL_ID, GROUP);
 
+    /** The faint eye of ender outline on the empty slot ({@code textures/gui/sprites/container/slot/ender_chest.png}). */
+    public static final Identifier EMPTY_ICON =
+            Identifier.fromNamespaceAndPath(PocketEnderChest.MOD_ID, "container/slot/ender_chest");
+
     /** The slot group, set by {@link #register}. */
     public static ParityGroup ENDER_CHEST;
 
@@ -67,7 +72,10 @@ public final class EnderSlot {
                 .shiftClickIn(true)
                 // Ender chests stack, so vanilla's double-click collect elsewhere would
                 // sweep this slot's into the cursor; the kept stack stays put.
-                .collect(false));
+                .collect(false)
+                // The outline is vanilla's own getNoItemIcon pass (SlotSpec.emptyIcon);
+                // no mixin of ours needed.
+                .emptyIcon(EMPTY_ICON));
     }
 
     /**
