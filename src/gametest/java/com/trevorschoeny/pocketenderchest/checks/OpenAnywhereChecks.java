@@ -1,10 +1,8 @@
 package com.trevorschoeny.pocketenderchest.checks;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import com.trevorschoeny.openanywhere.Settings;
 import com.trevorschoeny.openanywhere.TabId;
 import com.trevorschoeny.openanywhere.Tabs;
-import com.trevorschoeny.openanywhere.mixin.ScreenAccessor;
 import com.trevorschoeny.pocketenderchest.EnderSlot;
 import com.trevorschoeny.pocketenderchest.ShownView;
 
@@ -18,7 +16,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.input.MouseButtonInfo;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.ChestMenu;
@@ -108,23 +105,8 @@ public class OpenAnywhereChecks implements FabricClientGameTest {
         }
     }
 
-    /** Two left clicks on the ender chest slot, the cursor still, as Open Anywhere's own checks do. */
     private static void doubleClickSlot(ClientGameTestContext ctx) {
-        double[] at = ctx.computeOnClient(mc -> {
-            var screen = (AbstractContainerScreen<?>) mc.gui.screen();
-            Slot s = enderSlot(mc);
-            ScreenAccessor edge = (ScreenAccessor) screen;
-            double f = (double) mc.getWindow().getScreenWidth() / mc.getWindow().getGuiScaledWidth();
-            return new double[] {(edge.openanywhere$leftPos() + s.x + 8) * f, (edge.openanywhere$topPos() + s.y + 8) * f};
-        });
-        ctx.getInput().setCursorPos(at[0], at[1]);
-        ctx.waitTick();
-        ctx.runOnClient(mc -> {
-            var mouse = (net.fabricmc.fabric.mixin.client.gametest.input.MouseHandlerAccessor) mc.mouseHandler;
-            for (int i = 0; i < 2; i++) for (int action : new int[] {1, 0})
-                mouse.invokeOnButton(mc.getWindow().handle(), new MouseButtonInfo(InputConstants.MOUSE_BUTTON_LEFT, 0), action);
-        });
-        ctx.waitTicks(8);
+        EnderSlotChecks.doubleClickSlot(ctx);
     }
 
     private static Slot enderSlot(Minecraft mc) {

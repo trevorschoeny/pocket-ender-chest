@@ -31,7 +31,7 @@ import java.util.List;
 
 /**
  * Self-checks for the slot scene (test-gallery/scenes/pocket-ender-chest/slot.json), plus
- * survival screenshots. With {@code -PwithGear} Simple Elytra Slot and Simple Totem Slot are
+ * survival screenshots. The double-clicks are real mouse clicks. With {@code -PwithGear} Simple Elytra Slot and Simple Totem Slot are
  * loaded too, and the ender chest slot must sit on top of their column. The double-click
  * itself is checked by hand; these send its packet and check what the server does with it.
  */
@@ -104,7 +104,7 @@ public class EnderSlotChecks implements FabricClientGameTest {
      */
     private static void openAndBack(ClientGameTestContext ctx, SceneWorld.Opened scene) {
         openInventory(ctx);
-        sendOpen(ctx);
+        doubleClickSlot(ctx);
         ctx.waitForScreen(ContainerScreen.class);
         ctx.waitTicks(5);
         ctx.takeScreenshot("ender-open" + SUFFIX);
@@ -141,7 +141,7 @@ public class EnderSlotChecks implements FabricClientGameTest {
      */
     private static void closesWhenEmptied(ClientGameTestContext ctx, SceneWorld.Opened scene) {
         openInventory(ctx);
-        sendOpen(ctx);
+        doubleClickSlot(ctx);
         ctx.waitForScreen(ContainerScreen.class);
         server(scene).runOnServer(server -> {
             ServerPlayer p = player(server);
@@ -161,12 +161,25 @@ public class EnderSlotChecks implements FabricClientGameTest {
         ctx.waitTicks(5);
     }
 
-    /** The double-click's packet for the slot on the menu in front, as {@code DoubleClick} sends it. */
-    private static void sendOpen(ClientGameTestContext ctx) {
-        ctx.runOnClient(mc -> {
-            Slot ender = slot(mc.player.containerMenu.slots, EnderSlot.PANEL_ID);
-            ClientPlayNetworking.send(new Opening.OpenC2S(ender.index));
+    /** A real double-click on the ender chest slot: two left clicks, the cursor still. */
+    static void doubleClickSlot(ClientGameTestContext ctx) {
+        double[] at = ctx.computeOnClient(mc -> {
+            var screen = (AbstractContainerScreen<?>) mc.gui.screen();
+            Slot s = slot(screen.getMenu().slots, EnderSlot.GROUP_ID.panelId());
+            if (s == null) throw new AssertionError("no ender chest slot on " + screen);
+            var edge = (com.trevlar.slotkit.mixin.AbstractContainerScreenAccessor) screen;
+            double f = (double) mc.getWindow().getScreenWidth() / mc.getWindow().getGuiScaledWidth();
+            return new double[] {(edge.sk$getLeftPos() + s.x + 8) * f, (edge.sk$getTopPos() + s.y + 8) * f};
         });
+        ctx.getInput().setCursorPos(at[0], at[1]);
+        ctx.waitTick();
+        ctx.runOnClient(mc -> {
+            var mouse = (net.fabricmc.fabric.mixin.client.gametest.input.MouseHandlerAccessor) mc.mouseHandler;
+            for (int i = 0; i < 2; i++) for (int action : new int[] {1, 0})
+                mouse.invokeOnButton(mc.getWindow().handle(),
+                        new net.minecraft.client.input.MouseButtonInfo(com.mojang.blaze3d.platform.InputConstants.MOUSE_BUTTON_LEFT, 0), action);
+        });
+        ctx.waitTicks(8);
     }
 
     private static boolean isOwnEnderChest(ServerPlayer p, AbstractContainerMenu menu) {

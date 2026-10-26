@@ -13,12 +13,6 @@
   },
   "license": "MIT",
   "environment": "*",
-  "mixins": [
-    {
-      "config": "pocketenderchest.client.mixins.json",
-      "environment": "client"
-    }
-  ],
   "entrypoints": {
     "main": [
       "com.trevorschoeny.pocketenderchest.PocketEnderChest"
