@@ -42,6 +42,17 @@ public class EnderSlotChecks implements FabricClientGameTest {
 
     @Override
     public void runTest(ClientGameTestContext ctx) {
+        // With Open Anywhere installed, opening is Open Anywhere's: only its checks run then
+        // (OpenAnywhereChecks, compiled only with -PwithOpenAnywhere).
+        if (FabricLoader.getInstance().isModLoaded("openanywhere")) {
+            try {
+                Class.forName("com.trevorschoeny.pocketenderchest.checks.OpenAnywhereChecks")
+                        .asSubclass(FabricClientGameTest.class).getDeclaredConstructor().newInstance().runTest(ctx);
+            } catch (ReflectiveOperationException e) {
+                throw new AssertionError("Open Anywhere is loaded but its checks aren't built (run with -PwithOpenAnywhere)", e);
+            }
+            return;
+        }
         try (SceneWorld.Opened scene = SceneWorld.open(ctx, "pocket-ender-chest", "slot")) {
             scene.standAt(scene.station("pocketenderchest:slot_on_top"), 0);
             slotOnTop(ctx, scene);

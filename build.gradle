@@ -102,6 +102,21 @@ fabricApi {
     }
 }
 apply from: rootProject.file('Trevlar Mods Codebases/test-gallery/kit/checks.gradle')   // SceneWorld
+// `-PwithOpenAnywhere` also loads Open Anywhere's built jar (and Keybindery's, which it needs),
+// for the checks that opening is Open Anywhere's when it's installed (OpenAnywhereChecks).
+if (project.hasProperty('withOpenAnywhere')) {
+    evaluationDependsOn(':open-anywhere')
+    evaluationDependsOn(':keybindery')
+    dependencies {
+        gametestCompileOnly rootProject.project(':open-anywhere').sourceSets.main.output
+        gametestCompileOnly rootProject.project(':open-anywhere').sourceSets.client.output
+        gametestRuntimeOnly files(rootProject.project(':open-anywhere').tasks.named('jar'))
+        gametestRuntimeOnly files(rootProject.project(':keybindery').tasks.named('jar'))
+    }
+} else {
+    // Without Open Anywhere on the classpath its checks can't compile, so they're left out.
+    sourceSets.gametest.java.exclude '**/OpenAnywhereChecks.java'
+}
 if (project.hasProperty('withGear')) {
     evaluationDependsOn(':simple-elytra-slot')
     evaluationDependsOn(':simple-totem-slot')
