@@ -1,0 +1,176 @@
+// Pocket Ender Chest. A slot for an ender chest in the shared gear panel; double-click it
+// to open your ender chest from any screen. Universal jar: the slot and the opening run on
+// the server, the slot's presentation, the double-click and the close button on the client.
+// Built on SlotKit (the slot, MenuSwitch) and MenuKit (the panels); Inventory Plus is
+// optional and only hosts the settings tab. With Open Anywhere installed, opening is
+// Open Anywhere's and this mod only adds the slot.
+//
+// Included from the root settings.gradle as `:pocket-ender-chest`. Build with
+// `./gradlew :pocket-ender-chest:build` from the workspace root.
+
+plugins {
+    // The Loom plugin id is namespaced from 1.15 on. The version is pinned at the workspace root.
+    id 'net.fabricmc.fabric-loom' version '1.17-SNAPSHOT'
+    id 'java'
+    id 'com.modrinth.minotaur' version '2.+'
+}
+
+version = property('pocketenderchest_version')
+group   = property('maven_group')
+
+base.archivesName = 'pocket-ender-chest'
+
+java {
+    // Minecraft 26.x runs on Java 25.
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+repositories {
+    maven { url 'https://maven.fabricmc.net/' }
+    // Not for this mod. Inventory Plus (compile-only, below) depends on Keybindery,
+    // which depends on YACL, whose 26.x builds are only here.
+    maven { url 'https://api.modrinth.com/maven' }
+}
+
+// MenuKit, SlotKit and Inventory Plus have separate main and client source sets. A
+// project dependency sees only main, so their client halves are added by output, which
+// needs them evaluated first. A published jar holds both halves.
+evaluationDependsOn(':menukit')
+evaluationDependsOn(':slotkit')
+evaluationDependsOn(':inventory-plus')
+
+dependencies {
+    // 26.x is unobfuscated: no mappings line, and plain Java configurations.
+    minecraft "com.mojang:minecraft:${property('minecraft_version')}"
+    implementation "net.fabricmc:fabric-loader:${property('loader_version')}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${property('fabric_version')}"
+
+    implementation project(':menukit')
+    implementation project(':slotkit')
+}
+
+loom {
+    // src/main holds what a server loads (the slot, the opening); src/client holds the
+    // slot's look, the double-click, the close button and the Inventory Plus tab. The
+    // compiler refuses a main class that reaches a client one.
+    splitEnvironmentSourceSets()
+    mods {
+        pocketenderchest {
+            sourceSet sourceSets.main
+            sourceSet sourceSets.client
+        }
+    }
+    runs {
+        client { ideConfigGenerated = false }
+        server { ideConfigGenerated = false }
+        // Test Gallery: boots straight into the generated test world in run/saves/TestGallery.
+        // Generate it with `test-gallery/run-scene.sh pocket-ender-chest <scene>` (which also runs this).
+        testGallery {
+            inherit client
+            name 'Test Gallery'
+            programArgs '--quickPlaySingleplayer', 'TestGallery'
+            ideConfigGenerated = false
+        }
+    }
+}
+
+// Client-only dependencies, after loom {} so its client configurations exist.
+dependencies {
+    clientImplementation rootProject.project(':menukit').sourceSets.client.output
+    clientImplementation rootProject.project(':slotkit').sourceSets.client.output
+
+    // Inventory Plus is optional ("suggests"). Its API is compiled against and never
+    // bundled; only the `ip` package touches it, and only when IP is loaded.
+    clientCompileOnly project(':inventory-plus')
+    clientCompileOnly rootProject.project(':inventory-plus').sourceSets.client.output
+}
+
+// Self-checks: Fabric client gametests in src/gametest, run with `./gradlew :pocket-ender-chest:runClientGameTest`.
+// Each loads a Test Gallery scene's check world (gen.py --checks) and asserts what a station
+// with a matching "check" id says, and takes inventory screenshots into
+// build/run/clientGameTest/screenshots. `-PwithGear` also loads Simple Elytra Slot's and
+// Simple Totem Slot's built jars, so the checks hold the ender chest slot on top of the column.
+// The run opens its own window, runs every check, and closes; it never touches run/ or a scene client.
+fabricApi {
+    configureTests {
+        createSourceSet = true
+        modId = 'pocketenderchest_checks'
+        enableGameTests = false
+        enableClientGameTests = true
+        eula = true
+    }
+}
+apply from: rootProject.file('Trevlar Mods Codebases/test-gallery/kit/checks.gradle')   // SceneWorld
+if (project.hasProperty('withGear')) {
+    evaluationDependsOn(':simple-elytra-slot')
+    evaluationDependsOn(':simple-totem-slot')
+    dependencies {
+        gametestRuntimeOnly files(rootProject.project(':simple-elytra-slot').tasks.named('jar'))
+        gametestRuntimeOnly files(rootProject.project(':simple-totem-slot').tasks.named('jar'))
+    }
+}
+
+jar {
+    from('LICENSE') { rename { "${it}_${project.name}" } }
+}
+
+// Stamp the real project version into fabric.mod.json at build. The manifest
+// declares "version": "${version}", because a hardcoded manifest version
+// silently breaks every dependency gate against this mod.
+processResources {
+    inputs.property "version", project.version
+    filesMatching("fabric.mod.json") {
+        expand "version": inputs.properties.version
+    }
+}
+
+// ── Modrinth Publishing ────────────────────────────────────────────────
+// Pocket Ender Chest (slug pocket-ender-chest). Lead creates the project when Trev approves
+// the first release and fills in its id; empty until then.
+// Lead @ Trevlar Mods owns the publish.
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = ""
+    versionNumber = property('pocketenderchest_version')
+    versionName = "Pocket Ender Chest ${property('pocketenderchest_version')}"
+    versionType = "release"
+    // The player-facing changelog lives in changelog.md, one entry, overwritten each
+    // release (git keeps the history). Its source is Notion.
+    changelog = file('changelog.md').text
+    // The README is the public description (synced from Notion); `modrinthSyncBody` pushes it.
+    syncBodyFrom = file('README.md').text
+    // 26.x: no remap step, `jar` IS the shippable artifact.
+    uploadFile = jar
+    gameVersions = [property('minecraft_version')]
+    loaders = ["fabric"]
+    dependencies {
+        required.project "fabric-api"
+        required.project "menukit"
+        required.project "slotkit"
+        optional.project "inventory-plus"
+        optional.project "open-anywhere"
+    }
+}
+
+// The shipped jar must self-report the bumped version. A jar that
+// says the wrong version silently breaks every dependency gate against it, so this
+// fails the build instead of relying on someone remembering to unzip and look.
+tasks.register('verifyJarVersion') {
+    dependsOn 'jar'
+    doLast {
+        def jar = tasks.named('jar').get().archiveFile.get().asFile
+        def modJson = zipTree(jar).matching { include 'fabric.mod.json' }.singleFile
+        def stamped = new groovy.json.JsonSlurper().parse(modJson).version
+        if (stamped != project.version.toString()) {
+            throw new GradleException("${jar.name}: fabric.mod.json says ${stamped}, expected ${project.version}")
+        }
+        println "verifyJarVersion: ${jar.name} reports ${stamped}"
+    }
+}
+build.dependsOn verifyJarVersion
+
+// Kit ranges: the workspace root supplies the check (each Kit pinned to the major.minor
+// built against, below the next major); the task only has to exist.
+tasks.register('verifyKitRanges')
+build.dependsOn verifyKitRanges

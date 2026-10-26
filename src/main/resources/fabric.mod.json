@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "id": "pocketenderchest",
+  "version": "${version}",
+  "name": "Pocket Ender Chest",
+  "description": "A slot for your ender chest. Double-click it to open your ender chest from any screen.",
+  "authors": [
+    "trevorschoeny"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/pocket-ender-chest",
+    "sources": "https://github.com/trevorschoeny/pocket-ender-chest"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "mixins": [
+    {
+      "config": "pocketenderchest.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "entrypoints": {
+    "main": [
+      "com.trevorschoeny.pocketenderchest.PocketEnderChest"
+    ],
+    "client": [
+      "com.trevorschoeny.pocketenderchest.PocketEnderChestClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "fabric-api": "*",
+    "minecraft": "~26.3",
+    "menukit": ">=7.4.0 <8.0.0",
+    "slotkit": ">=2.2.0 <3.0.0"
+  },
+  "suggests": {
+    "inventoryplus": "*",
+    "openanywhere": "*"
+  },
+  "breaks": {
+    "inventoryplus": "<2.0.0"
+  },
+  "custom": {
+    "slotkit": {
+      "bothSides": "required"
+    },
+    "configkit": {
+      "suite": "inventoryplus"
+    }
+  }
+}
