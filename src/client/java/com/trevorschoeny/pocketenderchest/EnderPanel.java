@@ -40,6 +40,9 @@ final class EnderPanel {
                         PanelPosition.region(OutsideRegion.TOP_CENTER).gap(0)))
                 .in(ModeScope.CREATIVE, SlotPlacement.group(SlotGroupCategory.PLAYER_ARMOR,
                         PanelPosition.region(OutsideRegion.RIGHT_CENTER).gap(0)))
+                // Creative has no offhand column to sit above, so past two shown slots the
+                // column would run past the armor; wrap to a second column instead.
+                .wrapAfter(ModeScope.CREATIVE, 2)
                 .style(PanelStyle.NONE)
                 .vertical()
                 .gap(0)
