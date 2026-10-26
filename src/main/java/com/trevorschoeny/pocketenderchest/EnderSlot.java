@@ -48,12 +48,15 @@ public final class EnderSlot {
      * The ender chests, saved with the player on the server. Drops on death as vanilla's
      * inventory does (SlotKit's attachment default, which follows keepInventory). Only the
      * owner's client needs the contents, through the menu, so it isn't the "visible" kind.
+     * Carried: SlotKit's {@code ItemSources} walks it for a scope that asks
+     * ({@code ItemScope.carried(true)}), which is how Open Anywhere finds the ender chest
+     * here; Reach, Mend Anywhere and the totem search don't ask, so they never see it.
      */
     private static PlayerStorageAttachment<NonNullList<ItemStack>> STORAGE;
 
     /** Call once from the main entrypoint, on both sides. */
     public static void register() {
-        STORAGE = StorageAttachment.playerAttached(PocketEnderChest.MOD_ID, "ender_chest", 1);
+        STORAGE = StorageAttachment.playerAttached(PocketEnderChest.MOD_ID, "ender_chest", 1).carried();
 
         // The slot's data only. The panel it shows in is the client's (EnderPanel).
         ENDER_CHEST = ParityGroup.register(PANEL_ID, SlotSpec.at(GROUP, CATEGORY)
