@@ -60,8 +60,9 @@ final class DoubleClick {
         // Creative's inventory tab shows the player's slots on a menu of its own; the server
         // has the real inventory menu open, so the slot is named by its index there. Its
         // other tabs show no gear panel.
-        boolean creative = screen instanceof CreativeModeInventoryScreen c;
-        if (player == null || hovered == null || creative && !((CreativeModeInventoryScreen) screen).isInventoryOpen()) {
+        boolean creative = screen instanceof CreativeModeInventoryScreen;
+        if (player == null || hovered == null
+                || screen instanceof CreativeModeInventoryScreen c && !c.isInventoryOpen()) {
             lastSlot = -1;
             return true;
         }
