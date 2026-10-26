@@ -89,7 +89,7 @@ public final class Opening {
     /** Whether {@code slot} is this mod's ender chest slot, on any menu. */
     public static boolean isEnderSlot(Slot slot) {
         CreatedSlot created = CreatedSlot.of(slot);
-        return created != null && EnderSlot.PANEL_ID.equals(created.panelId());
+        return created != null && EnderSlot.GROUP_ID.panelId().equals(created.panelId());
     }
 
     /** The ender chest as opened from the slot: vanilla's 3-row chest menu on the player's own ender chest. */

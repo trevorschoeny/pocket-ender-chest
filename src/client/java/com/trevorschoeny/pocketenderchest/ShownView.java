@@ -23,7 +23,7 @@ import java.lang.ref.WeakReference;
  * says so right after opening it, {@link Opening.ShownS2C}), and the x on its frame's
  * top-right corner that goes back where the double-click came from.
  */
-final class ShownView {
+public final class ShownView {
 
     private ShownView() {}
 
@@ -60,7 +60,7 @@ final class ShownView {
     }
 
     /** Whether the screen in front is the ender chest opened from the slot. */
-    static boolean showing() {
+    public static boolean showing() {
         var player = Minecraft.getInstance().player;
         return player != null && player.containerMenu == shown.get();
     }
