@@ -25,11 +25,11 @@ import net.minecraft.world.item.ItemStack;
 /**
  * Opening the ender chest from the slot, on the server, without Open Anywhere.
  *
- * <p>A double-click on the slot ({@link OpenC2S}) turns the screen the player is on into
- * vanilla's ender chest screen on their own 27 ender chest slots, through SlotKit's
- * {@link MenuSwitch}: a chest they opened in the world waits open behind it, lid up. The x
- * on that screen ({@link CloseC2S}) goes back: to the chest, or to the inventory when the
- * switch started there. Escape closes everything, as on any MenuSwitch screen.
+ * <p>A double-click on the slot ({@link OpenC2S}) turns the inventory into vanilla's ender
+ * chest screen on the player's own 27 ender chest slots, through SlotKit's
+ * {@link MenuSwitch}. The slot shows only on the inventory screens (Trev, 2026-10-25: no
+ * opening from a chest), but the x ({@link CloseC2S}) still asks MenuSwitch to go back first,
+ * so a menu set aside would come back rather than being dropped. Escape closes it.
  *
  * <p>The ender chest screen stays open only while an ender chest is in the slot and the mod
  * is on ({@link EnderView#stillValid}); vanilla closes it the tick that stops being true.
