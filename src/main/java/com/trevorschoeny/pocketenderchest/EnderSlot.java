@@ -71,7 +71,7 @@ public final class EnderSlot {
     }
 
     /**
-     * Ender chests only, a whole stack allowed (Trev, 2026-10-24). Placing is refused while
+     * Ender chests only, a whole stack allowed. Placing is refused while
      * the mod is off or the slot is hidden, which also stops shift-click routing into a slot
      * nobody can see; taking out is always allowed.
      */

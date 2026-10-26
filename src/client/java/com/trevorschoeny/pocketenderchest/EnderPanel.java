@@ -14,8 +14,7 @@ import com.trevlar.slotkit.api.slot.SlotPlacement;
 /**
  * The ender chest slot's part of {@code trevlar:gear}, the panel it shares with Simple
  * Elytra Slot (order 10) and Simple Totem Slot (order 20): one column above the offhand in
- * survival, right of the armor in creative. Order 0 puts the ender chest on top (Trev,
- * 2026-10-24). A screen without the offhand or the armor (a chest) has no group to place it
+ * survival, right of the armor in creative. Order 0 puts the ender chest on top. A screen without the offhand or the armor (a chest) has no group to place it
  * on, so it doesn't show there.
  *
  * <p>Everything after {@code visibleWhen} is the panel's own declaration and matches the

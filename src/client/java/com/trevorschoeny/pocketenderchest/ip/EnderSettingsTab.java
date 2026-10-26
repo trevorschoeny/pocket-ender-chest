@@ -27,10 +27,10 @@ import java.util.List;
  * The Ender Chest tab in Inventory Plus's settings menu: the frame IP's tabs have (title,
  * description, Reset to Defaults, On/Off, a line), then "Show the ender chest slot", grayed
  * while the mod is off. Without Open Anywhere installed, a line under it says what Open
- * Anywhere adds (Trev, 2026-10-24: the settings carry a plug for it).
+ * Anywhere adds.
  *
- * <p>ponytail: the frame is laid out by hand, as Simple Totem Slot's tab does. It belongs in
- * MenuKit or IP's API once more suite mods repeat it.
+ * <p>The frame is laid out by hand, as Simple Totem Slot's tab does. Move it into MenuKit or
+ * IP's API once more mods repeat it.
  */
 public final class EnderSettingsTab {
 

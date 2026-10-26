@@ -29,7 +29,7 @@ import testgallery.SceneWorld;
 
 /**
  * With Open Anywhere installed, the ender chest slot opens through Open Anywhere and this
- * mod only adds the slot (Trev, 2026-10-24). Run with {@code -PwithOpenAnywhere}. Drives a
+ * mod only adds the slot. Run with {@code -PwithOpenAnywhere}. Drives a
  * real double-click on the real slot, then checks: the player's ender chest in front as Open
  * Anywhere's tab from the carried slot, still there 20 ticks on; no x of this mod's on it;
  * then in Open Anywhere's "opened by hand" tab mode, back on the inventory the slot shows open

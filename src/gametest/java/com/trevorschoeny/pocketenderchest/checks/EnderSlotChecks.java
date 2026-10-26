@@ -33,7 +33,7 @@ import java.util.List;
  * Self-checks for the slot scene (test-gallery/scenes/pocket-ender-chest/slot.json), plus
  * survival screenshots. With {@code -PwithGear} Simple Elytra Slot and Simple Totem Slot are
  * loaded too, and the ender chest slot must sit on top of their column. The double-click
- * itself is Trev's to feel; these send its packet and check what the server does with it.
+ * itself is checked by hand; these send its packet and check what the server does with it.
  */
 public class EnderSlotChecks implements FabricClientGameTest {
 

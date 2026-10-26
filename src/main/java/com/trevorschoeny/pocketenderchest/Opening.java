@@ -27,8 +27,8 @@ import net.minecraft.world.item.ItemStack;
  *
  * <p>A double-click on the slot ({@link OpenC2S}) turns the inventory into vanilla's ender
  * chest screen on the player's own 27 ender chest slots, through SlotKit's
- * {@link MenuSwitch}. The slot shows only on the inventory screens (Trev, 2026-10-25: no
- * opening from a chest), but the x ({@link CloseC2S}) still asks MenuSwitch to go back first,
+ * {@link MenuSwitch}. The slot shows only on the inventory screens, so there is no opening
+ * from a chest, but the x ({@link CloseC2S}) still asks MenuSwitch to go back first,
  * so a menu set aside would come back rather than being dropped. Escape closes it.
  *
  * <p>The ender chest screen stays open only while an ender chest is in the slot and the mod

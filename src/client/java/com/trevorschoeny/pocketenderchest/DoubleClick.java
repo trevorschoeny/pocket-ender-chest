@@ -27,8 +27,8 @@ import net.minecraft.world.item.ItemStack;
  * back in its slot first. The window and the still cursor are Open Anywhere's, so the
  * double-click feels the same with or without it.
  *
- * <p>ponytail: between the clicks the lifted stack shows on the cursor; Open Anywhere draws
- * it back in its slot. Add that if the flicker bothers.
+ * <p>Between the clicks the lifted stack shows on the cursor, where Open Anywhere draws it
+ * back in its slot. Do the same here if the flicker bothers.
  */
 final class DoubleClick {
 
