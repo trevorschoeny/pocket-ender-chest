@@ -9,8 +9,10 @@
   ],
   "contact": {
     "homepage": "https://modrinth.com/mod/pocket-ender-chest",
-    "sources": "https://github.com/trevorschoeny/pocket-ender-chest"
+    "sources": "https://github.com/trevorschoeny/pocket-ender-chest",
+    "issues": "https://github.com/trevorschoeny/pocket-ender-chest/issues"
   },
+  "icon": "assets/pocketenderchest/icon.png",
   "license": "MIT",
   "environment": "*",
   "entrypoints": {
