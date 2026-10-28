@@ -54,7 +54,7 @@ public final class EnderSettingsTab {
                         .role(TextRole.HEADING).build(),
                 TextLabel.builder().at(0, 14)
                         .text(Component.literal("A slot for your ender chest. Double-click it to open "
-                                + "your ender chest from any screen."))
+                                + "your ender chest from your inventory."))
                         .role(TextRole.BODY).build(),
                 Flow.builder().at(0, 30).gap(10, 4)
                         .add(Button.builder().label(Component.literal("Reset to Defaults")).size(0, 16)
