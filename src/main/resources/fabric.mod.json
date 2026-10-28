@@ -3,7 +3,7 @@
   "id": "pocketenderchest",
   "version": "${version}",
   "name": "Pocket Ender Chest",
-  "description": "A slot for your ender chest. Double-click it to open your ender chest from any screen.",
+  "description": "A slot for your ender chest. Double-click it to open your ender chest from your inventory.",
   "authors": [
     "trevorschoeny"
   ],
