@@ -146,7 +146,7 @@ processResources {
 // Lead @ Trevlar Mods owns the publish.
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
-    projectId = ""
+    projectId = "vVtwWbpK"
     versionNumber = property('pocketenderchest_version')
     versionName = "Pocket Ender Chest ${property('pocketenderchest_version')}"
     versionType = "release"
